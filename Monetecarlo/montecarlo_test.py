@@ -1,9 +1,10 @@
 import unittest
-from monetecarlo import Die
-
+from montecarlo import Die
+import numpy as np
+import pandas as pd
+'Tested'
 class DieTest(unittest.TestCase):
     
-    'Tested'
     def test_1_changeWeight(self):
         '''
         Creates a Die object and then changes the weight and then checks if the weight was indeed changed 
@@ -19,7 +20,7 @@ class DieTest(unittest.TestCase):
         message = 'Unable to create die object and change its weight properly'
         
         self.assertTrue(value, message)
-    
+        
     def test_2_rollDie(self):
         '''
         Creates a die object and then rolls it 5 times. Checks to see if the returned object is a list of length 5
@@ -36,7 +37,26 @@ class DieTest(unittest.TestCase):
         message = "The returned object after a roll is either not a list or is not of proper length"
 
         self.assertTrue(value, message)
-            
+        
+    def test_3_showDie(self):
+        '''
+        Creates a die then checks if the displayed die from showDie is equal to the die itself
+        '''
+
+        faces = np.array([1, 2, 3])
+
+        die = Die(faces)
+
+        dieItself = die._die
+
+        displayedDie = die.showDie()
+
+        value = dieItself.equals(displayedDie)
+
+        message = 'The shoeDie method does not display the actual die'
+
+        self.assertTrue(value, message)
+        
 if __name__ == '__main__':
     unittest.main()
     

@@ -104,7 +104,6 @@ class Die():
             
         #Index of the face value that wants to be changed
         index = self._die.index[self._die['Faces'] == faceValue][0]
-        print(newWeight)
 
         #Change weight of the given face to the new weight
 
@@ -128,7 +127,7 @@ class Die():
         
         weightsList = weightsList/sum(weightsList)
 
-        outcomes = choice(facesList, rolls, p = weightsList)
+        outcomes = list(choice(facesList, rolls, p = weightsList))
 
         return outcomes
     
