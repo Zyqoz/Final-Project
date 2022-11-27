@@ -1,5 +1,6 @@
 import unittest
 from montecarlo import Die
+from montecarlo import Game
 import numpy as np
 import pandas as pd
 'Tested'
@@ -57,6 +58,55 @@ class DieTest(unittest.TestCase):
 
         self.assertTrue(value, message)
         
+'Tested'    
+class GameTest(unittest.TestCase):
+
+    def test_1_play(self):
+        '''
+        Creates two Die objects and then creates a Game object. The Game object is played and the resulting dataframe is checked if it has 10 elements as it should
+        '''
+        array1 = np.array([1, 2, 3])
+        array2 = np.array([1, 2, 3])
+
+        die1 = Die(array1)
+        die2 = Die(array2)
+
+        dieObjects = [die1, die2]
+
+        testGame = Game(dieObjects)
+
+        testGame.play(10)
+
+        value = len(list(testGame._results.index)) == 10
+
+        message = 'The _results dataframe is not being setup properly'
+
+        self.assertTrue(value, message)
+
+    def test_2_show(self):
+        '''
+        Checks and sees if the _results dataframe is equivalent to the dataframe given by the show() method when comparing the wide formats
+        '''
+        array1 = np.array([1, 2, 3])
+        array2 = np.array([1, 2, 3])
+
+        die1 = Die(array1)
+        die2 = Die(array2)
+
+        dieObjects = [die1, die2]
+
+        testGame = Game(dieObjects)
+
+        testGame.play(10)
+
+        resultsFromShow = testGame.show()
+
+        value = testGame._results.equals(resultsFromShow)
+
+        message = '_results dataframe is not equivalent to the dataframe given by the show() method when comparing the wide formats'
+
+        self.assertTrue(value, message)
+            
 if __name__ == '__main__':
     unittest.main()
     

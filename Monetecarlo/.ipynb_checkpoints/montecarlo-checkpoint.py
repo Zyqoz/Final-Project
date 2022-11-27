@@ -144,3 +144,100 @@ class Die():
         _die: dataframe
         '''
         return self._die
+    
+'Tested'    
+class Game():
+    '''
+    This class represents a game with one or more die of equivalent list of faces but possibly different weights.
+    This class has the ability to roll all the dice a certain number of times.
+    ...
+    
+    Attributes
+    ----------
+    
+    dice: list
+        Private list that contains the Die objects that are part of the game
+    
+    _results: dataframe
+        Stores the results of the game
+    
+    Methods
+    -------
+        play(n)
+            Plays the game n times and saves the results to a private dataframe
+    
+    '''
+    
+    
+    def __init__(self, dieObjects):
+        '''
+        Takes a list of dieObjects and instantiates a new Game object with similar dice.
+        
+        Parameters
+        ----------
+            dieObjects: list
+                List with Die objects as elements
+        
+        '''
+        
+        self.dice = dieObjects
+        
+    
+    def play(self, n):
+        '''
+        Rolls all the Die in the _dice list n times. The result is saved in _results, the private dataframe.
+        
+        Parameters
+        ----------
+            n: int
+                The amount of times the dies in the dieObjects list will be rolled
+        '''
+        
+        #Creating a dataframe with the results of the first die in the dieObjects list
+        
+        rollResult = self.dice[0].rollDie(n)
+        
+        self._results = pd.DataFrame(rollResult)
+        
+        #Adding the results of all the die after the first die to the _results dataframe
+        
+        for x in range(1, len(self.dice)):
+             
+            dieResult = self.dice[x].rollDie(n)
+        
+            self._results[x] = dieResult
+        
+        self._results.index.name = 'Roll Number'
+    'Unfinished'     
+    def show(self, tabFormat = 'w'):
+        '''
+        Shows the user the results of the most recent play
+        
+        Parameters
+        ----------
+        tabFormat: String
+            Indicates whether to return the value in wide format or narrow format
+            'w' for wide format
+            'n' for narrow format
+        
+        Returns
+        -------
+            _results: pandas dataframe
+                private dataframe that has the results of the most recent game
+        '''
+        
+        try:
+            not tabFormat == 'w' or not tabFormat == 'n'
+                
+        except:
+            raise TypeError('The given table format does not exist. Table format must be either narrow or wide')
+        
+        if tabFormat == 'w':
+            return self._results
+        ''' 
+        if tabFormat == 'n':
+            narrow_results = pd.DataFrame({
+                'Roll': self._results.index
+                'Die' : self._results.names
+        '''         
+        
