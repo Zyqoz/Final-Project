@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
 from numpy.random import choice
+import random
 
 
 class Die():
+
     ''' 
     This class represents a die with N sides and W weights.
     
@@ -40,16 +42,15 @@ class Die():
         ----------
             faces: numpy nd array 
                 Can be either an int, float, or String.
-                Specifically, can only be int32, float64, or |S1
+                Specifically, can only be int32, float64, or each element of the array must be np.str_
         
         '''
         
         #Checking criteria of the argument
         
-            #If faces dtype is not int32, float64, or |S1, then an error
+            #If faces dtype is not int32, float64, or the elements of faces are not np.str_, then an error
             #is raised
-        
-        if not faces.dtype == 'int32' and not faces.dtype == '|S1' and not faces.dtype == 'float64':
+        if not faces.dtype == 'int32' and not type(faces[0]) == np.str_ and not faces.dtype == 'float64':
             raise TypeError('Incorrect dtype')
        
             #Checking if the elements of the face are unique
@@ -73,7 +74,7 @@ class Die():
         
         Parameters
         ----------
-            faceValue: |S1, int32, or float64
+            faceValue: string, int32, or float64
                 The face value whoose weight wants to be changed
             newWeight: float, or a number that can be converted to a float
                 New weight value
@@ -145,7 +146,7 @@ class Die():
         '''
         return self._die
     
-'Tested'    
+'Tested still need more changing'    
 class Game():
     '''
     This class represents a game with one or more die of equivalent list of faces but possibly different weights.
@@ -156,7 +157,7 @@ class Game():
     ----------
     
     dice: list
-        Private list that contains the Die objects that are part of the game
+        List that contains the Die objects that are part of the game
     
     _results: dataframe
         Stores the results of the game
@@ -240,4 +241,107 @@ class Game():
                 'Roll': self._results.index
                 'Die' : self._results.names
         '''         
+class Analyzer():
+    '''
+    Takes the result of a single game and computes statistical values of that game. These properties are available as attribute objects
+    
+    Attributes
+    ----------
+    game: Game object
+        The Game object on which analysis is done
         
+    type: String
+        Shows the dtype of the faces used
+        
+    face_counts_per_roll: dataframe
+        Has the face and the amount of times this was rolled
+    
+    jackpot_count: int
+        Count of how many times there was a jackpot in the game
+    
+    jackpot_results: dataframe
+        Shows which rolls resulted in a jackpot and their corresponding faces
+        
+    combo_count: dataframe
+        Distinct combination of faces rolled along with their counts
+    
+    
+    Methods
+    -------
+    
+    face_counts_per_roll()
+        Computes how many times a given face is ruled in every event
+        
+    jackpot()
+        Returns how many times there was a roll where all faces were equivalent
+    
+    combo()
+        Computes the distinct amount of faces rolled along with their counts
+    
+    '''
+    
+    def __init__(self, game):
+        
+        '''
+        Takes a game object and identifies the data type of the faces used
+
+        Parameters
+        ----------
+        game: Game object
+            A Game object on which analysis wants to be done
+        '''
+    
+        self.game = game
+    
+        self.type = game.dice[0]._die.Faces.dtype
+    
+    def compute_face_counts_per_roll(self):
+        '''
+        Computes how many times a given face was rolled for each roll
+        and then stores the results in the face_counts_per_roll dataframe
+        '''
+        
+        self.face_counts_per_roll = pd.DataFrame(
+            
+        columns = self.game.dice[0]._die.Faces,
+        
+        index = self.game._results.index,
+        
+        data = 0
+        )
+
+        for x in self.game._results.index:
+
+            for y in self.game._results.columns:
+
+                dataValue = self.game._results.iat[x, y]
+
+                col = self.face_counts_per_roll.columns.get_loc(dataValue)
+
+                self.face_counts_per_roll.iat[x, col] = self.face_counts_per_roll.iat[x, col] + 1
+    
+    def jackpot_count(self):
+        '''
+        Counts how many times there was a roll where all faces were equivalent
+        
+        '''
+        self.compute_face_counts_per_roll()
+        
+        indices = []
+
+        for x in range(len(self.face_counts_per_roll.index)):
+            for y in range(len(self.face_counts_per_roll.columns)):
+
+                if self.face_counts_per_roll.iat[x,y] == len(self.game._results.columns):
+                    indices.append(x)
+
+        self.jackpot_results = self.face_counts_per_roll.iloc[indices]
+        self.jackpot_count = len(indices)
+        
+        return self.jackpot_count
+    
+    def combo(self):
+        '''
+        Computes the distinct combinations of faces rolled and their corresponding counts
+        
+        '''

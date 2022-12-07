@@ -1,0 +1,6 @@
+PS C:\Users\mirmu\Documents\School\Graduate\MSDS\DS\Repositories\Final Project\Montecarlo> python montecarlo_test.py > montecarlo_tests_results.txt 
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.010s
+
+OK
